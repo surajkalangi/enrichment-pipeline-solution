@@ -21,6 +21,13 @@ export async function enrichDomains(domains: string[]): Promise<Company[]> {
   // - Normalize (trim + lowercase), validate syntax, and dedupe before calling provider.
   // - Reject or emit a "skipped" record for invalid lines so failures are explicit.
 
+  // REVIEW: Promise.all over the entire domains array creates an unbounded number of
+  // concurrent requests. For a handful of domains this is fine, but for large inputs
+  // (e.g. 100k domains) this will simultaneously open thousands of connections,
+  // likely triggering rate limits, exhausting provider capacity, and crashing the process.
+  // Concurrency should be bounded — e.g. via a semaphore or a worker pool that limits
+  // in-flight requests to a fixed number (e.g. 20) — so throughput scales safely
+  // without overwhelming the provider or the local network stack.
   const results = await Promise.all(
     domains.map(async (domain) => {
       // REVIEW: Infinite loop with no jitter/backoff is unsafe.

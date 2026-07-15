@@ -13,7 +13,7 @@ A small batch pipeline that reads company domains from a file, calls a mock enri
 git clone https://github.com/surajkalangi/enrichment-pipeline-solution.git
 cd enrichment-pipeline-solution
 python3 -m venv .venv && source .venv/bin/activate   # optional
-python -m pip install requests
+python -m pip install -r requirements.txt
 # (optional) set the provider token for non-test environments:
 # export PROVIDER_TOKEN=your_token_here
 ```
@@ -52,8 +52,8 @@ python3 pipeline_solution.py
 This will:
 
 - Enrich each valid domain via the mock provider, with per-request timeouts and bounded retries only for transient errors (TEMPORARY, RATE_LIMITED, network issues).
-- Write per-domain results as NDJSON to `results_step2.ndjson`.
-- Write a run summary as JSON to `summary_step2.json`.
+- Write per-domain results as NDJSON to `output.ndjson`.
+- Write a run summary as JSON to `summary.json`.
 
 ## Output overview
 
@@ -67,6 +67,18 @@ Each NDJSON record includes:
   - `foundedYear`: integer or `null`.
   - `annualRevenueUsd`: when available.
 
-`summary_step2.json` contains aggregate counts (total input, skipped, successes, failures, `failure_by_reason`) so an operator can quickly see how many domains succeeded, how many failed, and why.
+`summary.json` contains aggregate counts (total input, skipped, successes, failures, `failure_by_reason`) so an operator can quickly see how many domains succeeded, how many failed, and why.
+
+## Test the mock provider
+
+A small helper script, `client_test.py`, was used during development to exercise the mock API served by `starter-kit/mock-provider.js` and observe how it responds to sample requests.
+
+You can run it from the project root with:
+
+```bash
+python3 client_test.py
+```
+
+This is useful for quickly validating the provider contract before running the full pipeline.
 
 For design details and trade-offs (stack choice, retry rules, normalization guarantees, and scaling plan), see `DECISIONS.md`.

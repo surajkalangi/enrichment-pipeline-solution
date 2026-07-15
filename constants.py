@@ -10,8 +10,8 @@ TOKEN = os.getenv("PROVIDER_TOKEN", "test-token")
 
 # Use project-relative paths so the code is portable across machines
 INPUT_FILE = str(Path(__file__).parent / "starter-kit" / "domains.csv")
-OUTPUT_FILE = str(Path(__file__).parent / "results_step2.ndjson")
-SUMMARY_FILE = str(Path(__file__).parent / "summary_step2.json")
+OUTPUT_FILE = str(Path(__file__).parent / "output.ndjson")
+SUMMARY_FILE = str(Path(__file__).parent / "summary.json")
 
 DOMAIN_PATTERN = re.compile(
     r"^(?=.{1,253}$)(?!\-)([A-Za-z0-9\-]{1,63}\.)+[A-Za-z]{2,}$"

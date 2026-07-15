@@ -1,0 +1,10 @@
+{
+  "total_input_lines": 41,
+  "total_skipped": 5,
+  "total_enriched_success": 33,
+  "total_enriched_failure": 3,
+  "failure_by_reason": {
+    "provider_error_NO_MATCH": 2,
+    "retry_exhausted": 1
+  }
+}

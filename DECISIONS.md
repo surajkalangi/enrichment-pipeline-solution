@@ -52,7 +52,8 @@ For each successful enrichment, the pipeline produces an `enrichment` object wit
 - `name`: passed through from provider, or `null` when missing.
 - `domain`: passed through from provider, or `null` when missing.
 - `employeeCount_numeric`: an integer if the provider gave a single numeric employee count (e.g. `1200` or `"1200"`); otherwise `None`.
-- `employeeCount_band`: a banded string such as `'1-10'`, `'11-50'`, …, `'100,001+'` chosen based on `employeeCount_numeric` or the lower bound of a banded string like `"1,000-5,000"`.
+- `employeeCount_band`: a banded string such as `'1-10'`, `'11-50'`, …, `'100,001+'` chosen based on `employeeCount_numeric` or the lower bound of a banded string like `"1,000-5,000"`
+- `employeeCount_raw`: Raw value preserved for debuggability.
 - `industry_list`: always a list of strings:
   - If the provider returns a single string, it becomes `[string]`.
   - If it returns an array, it becomes a cleaned list of strings.

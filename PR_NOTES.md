@@ -7,7 +7,7 @@ This change adds a small, CLI-style data enrichment pipeline that:
 - Reads company domains from an input file (`domains.csv`).
 - Calls the mock enrichment provider (`/v1/enrich`, v2 responses) with bounded retries.
 - Normalizes the provider’s messy v2 data into a consistent schema.
-- Writes per-domain results as NDJSON (`results_step2.ndjson`) and a run summary (`summary_step2.json`).
+- Writes per-domain results as NDJSON (`output.ndjson`) and a run summary (`summary.json`).
 - Ensures there is no silent data loss: every input line is accounted for as enriched or explicitly skipped.
 
 The goal is to demonstrate a robust, operator-friendly, and scale-aware approach within the assignment’s 3–4 hour scope.
@@ -78,9 +78,9 @@ This normalization moves the complexity from consumers into the pipeline where i
 
 #### 4. Output and run summary
 
-- Per-domain results are written as NDJSON to `results_step2.ndjson`:
+- Per-domain results are written as NDJSON to `output.ndjson`:
   - Fields include: `domain`, `http_status`, `elapsed_ms`, `provider_status`, `provider_code`, `enrichment`, `status` (`enriched_success` / `enriched_failure` / `skipped`), `failure_reason`, and `attempts`.
-- A run summary is written to `summary_step2.json`:
+- A run summary is written to `summary.json`:
   - `total_input_lines`, `total_enriched_success`, `total_enriched_failure`, `total_skipped`.
   - `failure_by_reason` (e.g. `provider_error_NO_MATCH`, `retry_exhausted`).
 
