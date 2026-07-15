@@ -1,6 +1,7 @@
 import time
 import json
 import requests
+import logging
 
 from transform_data import normalize_data
 
@@ -9,10 +10,15 @@ from constants import (
     TOKEN,
     INPUT_FILE,
     OUTPUT_FILE,
+    SUMMARY_FILE,
     DOMAIN_PATTERN,
     MAX_ATTEMPTS,
     BASE_SLEEP_SECONDS,
 )
+
+# Basic logging configuration for the pipeline
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
 def is_valid_domain(domain: str) -> bool:
     """
@@ -178,8 +184,8 @@ def main():
         "failure_by_reason": {},
     }
 
-    with open(INPUT_FILE, "r") as f_in, open(OUTPUT_FILE, "w") as f_out, \
-         open("summary_step2.json", "w") as f_summary:
+    with open(INPUT_FILE, "r", encoding="utf-8") as f_in, open(OUTPUT_FILE, "w", encoding="utf-8") as f_out, \
+         open(SUMMARY_FILE, "w", encoding="utf-8") as f_summary:
         for line in f_in:
             stats["total_input_lines"] += 1
             raw = line.strip()
@@ -193,7 +199,7 @@ def main():
                     "reason": "empty_line",
                 }
                 f_out.write(json.dumps(result) + "\n")
-                print("Skipped empty line")
+                logger.info("Skipped empty line")
                 continue
 
             domain = raw.lower()
@@ -207,7 +213,7 @@ def main():
                     "reason": "duplicate_domain",
                 }
                 f_out.write(json.dumps(result) + "\n")
-                print(f"Skipped duplicate domain: {domain}")
+                logger.info("Skipped duplicate domain: %s", domain)
                 continue
 
             if not is_valid_domain(domain):
@@ -219,7 +225,7 @@ def main():
                     "reason": "invalid_domain_syntax",
                 }
                 f_out.write(json.dumps(result) + "\n")
-                print(f"Skipped invalid domain syntax: {domain}")
+                logger.info("Skipped invalid domain syntax: %s", domain)
                 continue
 
             seen.add(domain)
